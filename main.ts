@@ -182,8 +182,8 @@ function bot_Servo_Motors_Basic_Fn (network_ReceivedString_FromControllerJoystic
         )
         quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
         quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
-        40,
-        -40
+        turns_wheel_speed,
+        0 - turns_wheel_speed
         )
     } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "right") {
         last_joystick_command = 0
@@ -199,8 +199,8 @@ function bot_Servo_Motors_Basic_Fn (network_ReceivedString_FromControllerJoystic
         )
         quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
         quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
-        -40,
-        40
+        0 - turns_wheel_speed,
+        turns_wheel_speed
         )
     } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "stop") {
         last_joystick_command = 0
@@ -816,6 +816,7 @@ let l_boost_fwd_cal = 0
 let r_boost_fwd_cal = 0
 let l_normal_fwd_cal = 0
 let r_normal_fwd_cal = 0
+let turns_wheel_speed = 0
 let max_turbo_speed = 0
 let max_normal_speed = 0
 let accel_rate = 0
@@ -840,16 +841,28 @@ setup_Code_For_System_Func()
 quest_Note_1.quest_Show_String_For_Note_Big_Func(
 "Below, Setup Code for Teacher:"
 )
+quest_Note_4.quest_Show_String_For_Note_Small_Func(
+"Button pressed flags"
+)
+// Indicates whether joystick "F" button (turbo) is pressed; used by motor control function.
 turbo_mode = 0
+quest_Note_4.quest_Show_String_For_Note_Small_Func(
+"Dynamic speed control variables"
+)
 // The accel ramp doesn't have to start at 0. Initial testing showed that while setting any value from 0 to 100 is possible, starting speeds of over 20 caused tire slippage.  This condition can vary by terrain type.
 normal_start_speed = 20
 // This variable controls the rate of the acceleration ramp-- how long the bot takes to get from zero to max. In initial testing 1 worked well, 2 produced tire slippage.
 accel_rate = 1
+// This sets top speed when Turbo Button isn't pressed.
 max_normal_speed = 60
 // This value will determine the maximum speed to which the bot will accelerate before topping out. Valid range is 0 to 100.
 max_turbo_speed = 99
 quest_Note_4.quest_Show_String_For_Note_Small_Func(
-"Per-bot Power Calibration for Left/Right drift:"
+"Wheel speed for turns"
+)
+turns_wheel_speed = 40
+quest_Note_4.quest_Show_String_For_Note_Small_Func(
+"Per-bot Power Calibration values for Left/Right drift:"
 )
 r_normal_fwd_cal = 0.85
 l_normal_fwd_cal = 1
