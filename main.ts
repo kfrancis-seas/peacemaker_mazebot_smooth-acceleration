@@ -802,6 +802,9 @@ setup_Code_For_System_Func()
 quest_Note_1.quest_Show_String_For_Note_Big_Func(
 "Below, Setup Code for Teacher:"
 )
+quest_Note_4.quest_Show_String_For_Note_Small_Func(
+""
+)
 turbo_mode = 0
 // The accel ramp doesn't have to start at 0. Initial testing showed that while setting any value from 0 to 100 is possible, starting speeds of over 20 caused tire slippage.  This condition can vary by terrain type.
 normal_start_speed = 20
