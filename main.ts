@@ -809,7 +809,7 @@ normal_start_speed = 20
 accel_rate = 1
 max_normal_speed = 60
 // This value will determine the maximum speed to which the bot will accelerate before topping out. Valid range is 0 to 100.
-max_turbo_speed = 99
+max_turbo_speed = 98
 quest_Note_1.quest_Show_String_For_Note_Big_Func(
 "Below, Setup Code for Student:"
 )
