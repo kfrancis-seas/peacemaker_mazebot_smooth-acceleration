@@ -50,145 +50,6 @@ input.onLogoEvent(TouchButtonEvent.LongPressed, function () {
         control.reset()
     }
 })
-function bot_Servo_Motors_Basic_Fn (network_ReceivedString_FromControllerJoystick_Str_ParamIn: string) {
-    if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "forward") {
-        images.createImage(`
-            . . # . .
-            . # # # .
-            . . # . .
-            . . # . .
-            . . . . .
-            `).showImage(0, 0)
-        quest_Note_1.quest_Show_String_For_Note_Big_Func(
-        "last_joystick_command can be 0(off), 1(fwd), or 2(back)"
-        )
-        if (last_joystick_command != 1) {
-            quest_Note_1.quest_Show_String_For_Note_Small_Func(
-            "User just pushed the stick forward"
-            )
-            last_joystick_command = 1
-            // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
-            normal_accel_speed = normal_start_speed
-        } else {
-            quest_Note_1.quest_Show_String_For_Note_Small_Func(
-            "user is holding stick forward - accelerate and hold"
-            )
-            if (normal_accel_speed < max_normal_speed / 1) {
-                quest_Note_1.quest_Show_String_For_Note_Small_Func(
-                "Still accelerating - increment speed"
-                )
-                // This keeps accelerating until max speed is achieved
-                normal_accel_speed += accel_rate
-            } else {
-                if (turbo_mode == 1) {
-                    // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
-                    normal_accel_speed = max_turbo_speed
-                } else {
-                    // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
-                    normal_accel_speed = max_normal_speed
-                }
-            }
-        }
-        // //jwc o roboQuest.powerMotorsViaBlueRedBlackPins(PortGroup_BlueRedBlack__PortIds__Enum.S1_MotorLeft__S0_MotorRight, motor_Power_ZERO_INT, motor_Power_ZERO_INT)
-        quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
-        quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
-        normal_accel_speed,
-        normal_accel_speed
-        )
-    } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "backward") {
-        images.createImage(`
-            . . . . .
-            . . # . .
-            . . # . .
-            . # # # .
-            . . # . .
-            `).showImage(0, 0)
-        quest_Note_1.quest_Show_String_For_Note_Small_Func(
-        "Subtract all turbo values from zero to cause backward motor movement"
-        )
-        if (last_joystick_command != 2) {
-            quest_Note_1.quest_Show_String_For_Note_Small_Func(
-            "User just pushed the stick backward"
-            )
-            last_joystick_command = 2
-            // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
-            normal_accel_speed = 0 - normal_start_speed
-        } else {
-            quest_Note_1.quest_Show_String_For_Note_Small_Func(
-            "user is holding stick backward - accelerate and hold"
-            )
-            if (normal_accel_speed > (0 - max_normal_speed) / 1) {
-                quest_Note_1.quest_Show_String_For_Note_Small_Func(
-                "Still accelerating - increment speed"
-                )
-                normal_accel_speed += 0 - accel_rate
-            } else {
-                if (turbo_mode == 1) {
-                    // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
-                    normal_accel_speed = 0 - max_turbo_speed
-                } else {
-                    // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
-                    normal_accel_speed = 0 - max_normal_speed
-                }
-            }
-        }
-        // //jwc o roboQuest.powerMotorsViaBlueRedBlackPins(PortGroup_BlueRedBlack__PortIds__Enum.S1_MotorLeft__S0_MotorRight, motor_Power_ZERO_INT, motor_Power_ZERO_INT)
-        quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
-        quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
-        normal_accel_speed,
-        normal_accel_speed
-        )
-    } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "left") {
-        last_joystick_command = 0
-        images.createImage(`
-            . . . . .
-            . # . . .
-            # # # # .
-            . # . . .
-            . . . . .
-            `).showImage(0, 0)
-        quest_Note_2.quest_Show_String_For_Note_Big_Func(
-        "Below Moddable: Motor Power_% [+/-100% max]"
-        )
-        quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
-        quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
-        40,
-        -20
-        )
-    } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "right") {
-        last_joystick_command = 0
-        images.createImage(`
-            . . . . .
-            . . . # .
-            . # # # #
-            . . . # .
-            . . . . .
-            `).showImage(0, 0)
-        quest_Note_2.quest_Show_String_For_Note_Big_Func(
-        "Below Moddable: Motor Power_% [+/-100% max]"
-        )
-        quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
-        quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
-        -20,
-        40
-        )
-    } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "stop") {
-        last_joystick_command = 0
-        images.createImage(`
-            . . . . .
-            . . . . .
-            . . # . .
-            . . . . .
-            . . . . .
-            `).showImage(0, 0)
-        // //jwc o roboQuest.powerMotorsViaBlueRedBlackPins(PortGroup_BlueRedBlack__PortIds__Enum.S1_MotorLeft__S0_MotorRight, motor_Power_ZERO_INT, motor_Power_ZERO_INT)
-        quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
-        quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
-        0,
-        0
-        )
-    }
-}
 function bot_Servo_Arms_Fn (network_ReceivedString_FromControllerJoystick_Str_ParamIn: string) {
     if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "arm_up") {
         images.createImage(`
@@ -460,6 +321,181 @@ function setup_VariablesAndConstants_UserCustomizableNot_Func () {
         )
     }
 }
+function bot_Servo_Motors_Basic_Fn2 (network_ReceivedString_FromControllerJoystick_Str_ParamIn: string) {
+    if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "forward") {
+        images.createImage(`
+            . . # . .
+            . # # # .
+            . . # . .
+            . . # . .
+            . . . . .
+            `).showImage(0, 0)
+        quest_Note_1.quest_Show_String_For_Note_Big_Func(
+        "last_joystick_command can be 0(off), 1(fwd), or 2(back)"
+        )
+        if (last_joystick_command != 1) {
+            quest_Note_1.quest_Show_String_For_Note_Small_Func(
+            "User just pushed the stick forward"
+            )
+            last_joystick_command = 1
+            // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
+            normal_accel_speed = normal_start_speed
+        } else {
+            quest_Note_1.quest_Show_String_For_Note_Small_Func(
+            "user is holding stick forward - accelerate and hold"
+            )
+            // smooth accel begins at normal_start_speed and ends at the value specified below by (max_normal_speed/n).
+            // For smooth acceleration to Max normal speed make the divisor (n) equal to one.
+            // For smooth acceleration to one-half max_normal_speed followed by immediate jump to max_normal_speed, make the divisor (n) equal to 2.
+            quest_Note_1.quest_Show_String_For_Note_Small_Func(
+            "The divisor for max_normal_speed sets the point for jump to full power"
+            )
+            if (normal_accel_speed < max_normal_speed / 1) {
+                quest_Note_1.quest_Show_String_For_Note_Small_Func(
+                "Still accelerating - increment speed"
+                )
+                // This keeps accelerating until max speed is achieved
+                normal_accel_speed += accel_rate
+            } else {
+                if (turbo_mode == 1) {
+                    // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
+                    normal_accel_speed = max_turbo_speed
+                } else {
+                    // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
+                    normal_accel_speed = max_normal_speed
+                }
+            }
+        }
+        if (turbo_mode == 1) {
+            quest_Note_1.quest_Show_String_For_Note_Small_Func(
+            "Apply left/right power calibrations and set motor power"
+            )
+            // //jwc o roboQuest.powerMotorsViaBlueRedBlackPins(PortGroup_BlueRedBlack__PortIds__Enum.S1_MotorLeft__S0_MotorRight, motor_Power_ZERO_INT, motor_Power_ZERO_INT)
+            quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
+            quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
+            normal_accel_speed * l_boost_fwd_cal,
+            normal_accel_speed * r_boost_fwd_cal
+            )
+        } else {
+            // //jwc o roboQuest.powerMotorsViaBlueRedBlackPins(PortGroup_BlueRedBlack__PortIds__Enum.S1_MotorLeft__S0_MotorRight, motor_Power_ZERO_INT, motor_Power_ZERO_INT)
+            quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
+            quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
+            normal_accel_speed * l_normal_fwd_cal,
+            normal_accel_speed * r_normal_fwd_cal
+            )
+        }
+    } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "backward") {
+        images.createImage(`
+            . . . . .
+            . . # . .
+            . . # . .
+            . # # # .
+            . . # . .
+            `).showImage(0, 0)
+        quest_Note_1.quest_Show_String_For_Note_Small_Func(
+        "Subtract all turbo values from zero to cause backward motor movement"
+        )
+        if (last_joystick_command != 2) {
+            quest_Note_1.quest_Show_String_For_Note_Small_Func(
+            "User just pushed the stick backward"
+            )
+            last_joystick_command = 2
+            // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
+            normal_accel_speed = 0 - normal_start_speed
+        } else {
+            quest_Note_1.quest_Show_String_For_Note_Small_Func(
+            "user is holding stick backward - accelerate and hold"
+            )
+            // smooth accel begins at normal_start_speed and ends at the value specified below by (max_normal_speed/n).
+            // For smooth acceleration to Max normal speed make the divisor (n) equal to one.
+            // For smooth acceleration to one-half max_normal_speed followed by immediate jump to max_normal_speed, make the divisor (n) equal to 2.
+            quest_Note_1.quest_Show_String_For_Note_Small_Func(
+            "The divisor for max_normal_speed sets the point for jump to full power"
+            )
+            if (normal_accel_speed > (0 - max_normal_speed) / 1) {
+                quest_Note_1.quest_Show_String_For_Note_Small_Func(
+                "Still accelerating - increment speed"
+                )
+                normal_accel_speed += 0 - accel_rate
+            } else {
+                if (turbo_mode == 1) {
+                    // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
+                    normal_accel_speed = 0 - max_turbo_speed
+                } else {
+                    // If the start speed is too high, the tires break static friction and one or both of them spin, which can make for squirrely behavior at start. In initial testing a starting speed of 20 and then gradual ramp up to 3,4,5... max produced a smooth acceleration that takes a little less than a second.
+                    normal_accel_speed = 0 - max_normal_speed
+                }
+            }
+        }
+        if (turbo_mode == 1) {
+            quest_Note_1.quest_Show_String_For_Note_Small_Func(
+            "Apply left/right power calibrations and set motor power"
+            )
+            // //jwc o roboQuest.powerMotorsViaBlueRedBlackPins(PortGroup_BlueRedBlack__PortIds__Enum.S1_MotorLeft__S0_MotorRight, motor_Power_ZERO_INT, motor_Power_ZERO_INT)
+            quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
+            quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
+            normal_accel_speed * l_boost_rev_cal,
+            normal_accel_speed * r_boost_rev_cal
+            )
+        } else {
+            // //jwc o roboQuest.powerMotorsViaBlueRedBlackPins(PortGroup_BlueRedBlack__PortIds__Enum.S1_MotorLeft__S0_MotorRight, motor_Power_ZERO_INT, motor_Power_ZERO_INT)
+            quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
+            quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
+            normal_accel_speed * l_normal_rev_cal,
+            normal_accel_speed * r_normal_rev_cal
+            )
+        }
+    } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "left") {
+        last_joystick_command = 0
+        images.createImage(`
+            . . . . .
+            . # . . .
+            # # # # .
+            . # . . .
+            . . . . .
+            `).showImage(0, 0)
+        quest_Note_2.quest_Show_String_For_Note_Big_Func(
+        "Below Moddable: Motor Power_% [+/-100% max]"
+        )
+        quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
+        quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
+        40,
+        -10
+        )
+    } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "right") {
+        last_joystick_command = 0
+        images.createImage(`
+            . . . . .
+            . . . # .
+            . # # # #
+            . . . # .
+            . . . . .
+            `).showImage(0, 0)
+        quest_Note_2.quest_Show_String_For_Note_Big_Func(
+        "Below Moddable: Motor Power_% [+/-100% max]"
+        )
+        quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
+        quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
+        -10,
+        40
+        )
+    } else if (network_ReceivedString_FromControllerJoystick_Str_ParamIn == "stop") {
+        last_joystick_command = 0
+        images.createImage(`
+            . . . . .
+            . . . . .
+            . . # . .
+            . . . . .
+            . . . . .
+            `).showImage(0, 0)
+        // //jwc o roboQuest.powerMotorsViaBlueRedBlackPins(PortGroup_BlueRedBlack__PortIds__Enum.S1_MotorLeft__S0_MotorRight, motor_Power_ZERO_INT, motor_Power_ZERO_INT)
+        quest_Motors.quest_Set_PowerMotorsViaBlueRedBlackPins_Func(
+        quest_PortGroup_BlueRedBlack_PortIds_Enum.S1_MotorLeft__S0_MotorRight,
+        0,
+        0
+        )
+    }
+}
 input.onGesture(Gesture.ScreenDown, function () {
     // //jwc o if (device_Type_Controller_Bool && (_system_Sw_ModeState__Now__Id_Int == _system_Sw_ModeState__Run__AndShow_01_DeviceType__ID_INT || _system_Sw_ModeState__Now__Id_Int == _system_Sw_ModeState__Run__AndShow_02_GroupChannelNum__ID_INT)) {
     if (_system_Hw_DeviceType__Now__Id_Int == _system_Hw_DeviceType__Controller_Joystick__ID_INT && (_system_Sw_ModeState__Now__Id_Int == _system_Sw_ModeState__Run__AndShow_01_DeviceType__ID_INT || _system_Sw_ModeState__Now__Id_Int == _system_Sw_ModeState__Run__AndShow_02_GroupChannelNum__ID_INT)) {
@@ -558,7 +594,6 @@ radio.onReceivedString(function (receivedString) {
         // //jwc o if (device_Type_Bot_Bool && _system_Sw_ModeState__Now__Id_Int == _system_Sw_ModeState__Run__AndShow_01_DeviceType__ID_INT) {
         // //jwc o } else if (!(device_Type_Bot_Bool)) {
         if (_system_Hw_DeviceType__Now__Id_Int == _system_Hw_DeviceType__Bot__ID_INT && (_system_Sw_ModeState__Now__Id_Int == _system_Sw_ModeState__Run__AndShow_01_DeviceType__ID_INT || _system_Sw_ModeState__Now__Id_Int == _system_Sw_ModeState__Run__AndShow_02_GroupChannelNum__ID_INT)) {
-            bot_Servo_Motors_Basic_Fn(receivedString)
             bot_Servo_Motors_Turbo_Fn(receivedString)
             bot_Servo_Arms_Fn(receivedString)
             network__CpuCycle_Post__Management_Func()
@@ -741,6 +776,8 @@ let network_GroupChannel_MyBotAndController_Base0__Digit_Ones__Int = 0
 let network_GroupChannel_MyBotAndController_Base0__Digit_Tens__Int = 0
 let network_GroupChannel_MyBotAndController_Base0__Digit_Hundreds__Int = 0
 let controller__Polar_OriginAtCenter__MagnitudePixel__PreviousCycles_IdleCount__Int = 0
+let normal_accel_speed = 0
+let last_joystick_command = 0
 let servoArm_Right_Up_Bool = false
 let servoArm_Left_Up_Bool = false
 let servoArm_Right_UP_DEGREES_INT = 0
@@ -770,14 +807,20 @@ let _system_Hw_DeviceType__Controller_Joystick__ID_INT = 0
 let _system_Hw_DeviceType__Null__ID_INT = 0
 let _system_Hw_DeviceType__Now__Id_Int = 0
 let _system_Sw_ModeState__Edit_GroupChannelNum__ID_INT = 0
-let normal_accel_speed = 0
-let last_joystick_command = 0
 let _system_Sw_ModeState__Reset__ID_INT = 0
 let _system_Sw_ModeState__Now__Id_Int = 0
 let screenBrightness_Heartbeat_Count_Int = 0
 let screen_XY_Brightness_Old_Num = 0
 let screen_Y_Old_Num = 0
 let screen_X_Old_Num = 0
+let l_boost_rev_cal = 0
+let r_boost_rev_cal = 0
+let l_normal_rev_cal = 0
+let r_normal_rev_cal = 0
+let l_boost_fwd_cal = 0
+let r_boost_fwd_cal = 0
+let l_normal_fwd_cal = 0
+let r_normal_fwd_cal = 0
 let max_turbo_speed = 0
 let max_normal_speed = 0
 let accel_rate = 0
@@ -797,9 +840,6 @@ quest_Note_2.quest_Show_String_For_Note_Big_Func(
 quest_Note_2.quest_Show_String_For_Note_Small_Func(
 "... Range [21-255], Default = 1"
 )
-quest_Note_4.quest_Show_String_For_Note_Small_Func(
-""
-)
 network_GroupChannel_MyBotAndController_Base0_Int = 94
 setup_Code_For_System_Func()
 quest_Note_1.quest_Show_String_For_Note_Big_Func(
@@ -818,14 +858,14 @@ max_turbo_speed = 99
 quest_Note_4.quest_Show_String_For_Note_Small_Func(
 "Per-bot Power Calibration for Left/Right \"drift\":"
 )
-let r_normal_fwd_cal = 0.85
-let l_normal_fwd_cal = 1
-let r_boost_fwd_cal = 0.9
-let l_boost_fwd_cal = 1
-let r_normal_rev_cal = 0.95
-let l_normal_rev_cal = 1
-let r_boost_rev_cal = 0.95
-let l_boost_rev_cal = 1
+r_normal_fwd_cal = 0.85
+l_normal_fwd_cal = 1
+r_boost_fwd_cal = 0.9
+l_boost_fwd_cal = 1
+r_normal_rev_cal = 0.95
+l_normal_rev_cal = 1
+r_boost_rev_cal = 0.95
+l_boost_rev_cal = 1
 quest_Note_1.quest_Show_String_For_Note_Big_Func(
 "Below, Setup Code for Student:"
 )
